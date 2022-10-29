@@ -3,9 +3,12 @@ import CartContext from './context-cart';
 
 const cartReducer = (state, action) => {
   if (action.type === 'ADD') {
+    const updatedItems = state.items.concat(action.item);
+    const updatedTotalAmount =
+      state.totalAmount + action.item.price * action.item.amount;
     return {
-      items: [...state.items, action.item],
-      totalAmount: state.totalAmount + action.item.amount * action.item.price,
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
     };
   }
   if (action.type === 'REMOVE') {
