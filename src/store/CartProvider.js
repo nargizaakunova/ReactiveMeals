@@ -16,7 +16,9 @@ const cartReducer = (state, action) => {
   }
   return { items: state.items, totalAmount: state.totalAmount };
 };
-const defaultCartState = { items: [], totalAmount: [] };
+
+const defaultCartState = { items: [], totalAmount: 0 };
+
 const CartProvider = (props) => {
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
