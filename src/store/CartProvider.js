@@ -3,22 +3,18 @@ import CartContext from './context-cart';
 
 const cartReducer = (state, action) => {
   if (action.type === 'ADD') {
-    const filteredItems = state.items.filter((item) => {
+    const filteredUniqueItems = state.items.filter((item) => {
       return item.id !== action.item.id;
     });
-    const prevItem = state.items.filter((item) => {
+    const filteredSameItems = state.items.filter((item) => {
       return item.id === action.item.id;
-    })[0];
-
-    const newItem = {
-      ...action.item,
-    };
-
-    if (prevItem) {
-      newItem.amount += prevItem.amount;
+    });
+    const addedItem = { ...action.item };
+    if (filteredSameItems.length) {
+      addedItem.amount += filteredSameItems[0].amount;
     }
 
-    const updatedItems = filteredItems.concat(newItem);
+    const updatedItems = filteredUniqueItems.concat(addedItem);
     const updatedTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
 
