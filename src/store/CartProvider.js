@@ -28,7 +28,33 @@ const cartReducer = (state, action) => {
     };
   }
   if (action.type === 'REMOVE') {
-    return {};
+    // 1. Find existing items by index
+    const existingCartItemIndex = state.items.findIndex((item) => {
+      return item.id === action.id;
+    });
+    const existingCartItem = state.items[existingCartItemIndex];
+    // 2. Recount total amount
+    const updatedAmount = state.totalAmount - existingCartItem.price;
+    let updatedItems;
+    // 3. If existing item is 1, filter by returning only unique, which will delete the last item as the result
+    if (existingCartItem.amount === 1) {
+      updatedItems = state.items.filter((item) => {
+        return item.id !== action.id;
+      });
+    } else {
+      // 4. If not 1, reduce by 1, update items and update amount of existing item
+      const updatedItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount - 1,
+      };
+      updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    }
+    // 5. Return updated amount and updated items
+    return {
+      totalAmount: updatedAmount,
+      items: updatedItems,
+    };
   }
   return { items: state.items, totalAmount: state.totalAmount };
 };
